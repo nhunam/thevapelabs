@@ -1,0 +1,223 @@
+{
+  "address": "qSSQdrgbWD7cXNE4S25Gbadkr6Yd878c4vJ7bWApxyD",
+  "metadata": {
+    "name": "vapeclub",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "claim_reward",
+      "discriminator": [
+        149,
+        95,
+        181,
+        242,
+        94,
+        90,
+        158,
+        162
+      ],
+      "accounts": [
+        {
+          "name": "reward_data",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_vape_account",
+      "discriminator": [
+        52,
+        33,
+        118,
+        71,
+        59,
+        162,
+        16,
+        63
+      ],
+      "accounts": [
+        {
+          "name": "vape_data",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_data",
+      "discriminator": [
+        62,
+        209,
+        63,
+        231,
+        204,
+        93,
+        148,
+        123
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vape_data",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  112,
+                  101,
+                  99,
+                  108,
+                  117,
+                  98
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_data",
+          "type": {
+            "defined": {
+              "name": "VapeData"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Reward",
+      "discriminator": [
+        174,
+        129,
+        42,
+        212,
+        190,
+        18,
+        45,
+        34
+      ]
+    },
+    {
+      "name": "VapeData",
+      "discriminator": [
+        9,
+        241,
+        149,
+        243,
+        201,
+        249,
+        187,
+        153
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NumberCastError",
+      "msg": "Number cast error"
+    }
+  ],
+  "types": [
+    {
+      "name": "Reward",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "reward",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VapeData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "puff_count",
+            "type": "i64"
+          },
+          {
+            "name": "time_consume",
+            "type": "f64"
+          },
+          {
+            "name": "time_submit",
+            "type": "f64"
+          },
+          {
+            "name": "estimate_nicotin_consume",
+            "type": "f64"
+          },
+          {
+            "name": "is_validated",
+            "type": "bool"
+          },
+          {
+            "name": "reward",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
