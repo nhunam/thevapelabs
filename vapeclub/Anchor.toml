@@ -4,15 +4,20 @@
 resolution = true
 skip-lint = false
 
+[programs.devnet]
+claimtoken = "2S5gqdRUEV1ogfYTMVE3rd9j8wz8Yw6vyJgYgWUgmNcD"
+saveproof = "4jr2thpc2ogDAgra58QhnyvXaXZGZzbEpCWxPf3TsuGA"
+
 [programs.localnet]
+saveproof = "4jr2thpc2ogDAgra58QhnyvXaXZGZzbEpCWxPf3TsuGA"
 vapeclub = "qSSQdrgbWD7cXNE4S25Gbadkr6Yd878c4vJ7bWApxyD"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
-wallet = "~/.config/solana/id.json"
+cluster = "Devnet"
+wallet = "~/.config/solana/devnet.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
