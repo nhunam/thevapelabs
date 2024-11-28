@@ -26,7 +26,7 @@ pub struct SubmitNote<'info> {
     #[account(
         init,
         payer = payer,
-        seeds = [b"thevapeclub", payer.key().as_ref()],
+        seeds = [b"vapeclub", payer.key().as_ref()],
         bump,
         space = 8 + 32 + 1 // 8 bytes for discriminator, 32 bytes for hash, 1 byte for bump
     )]
@@ -39,5 +39,6 @@ pub struct SubmitNote<'info> {
 #[account]
 pub struct NoteData {
     pub note_hash: [u8; 32],
-    pub bump: u8,           
+    pub bump: u8,
+    pub payer: Pubkey,           
 }

@@ -3,20 +3,21 @@ use anchor_spl::token::{mint_to, Mint, MintTo, Token, TokenAccount};
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_lang::solana_program::hash::{hash};
 
-declare_id!("2S5gqdRUEV1ogfYTMVE3rd9j8wz8Yw6vyJgYgWUgmNcD");
+declare_id!("Gw23UJ9YJXmsxS1JziWQZB7vjSLZGyCXrziFgCsaco61");
 
 #[program]
 mod claimtoken {
     use super::*;
 
     pub fn claim_token(ctx: Context<ClaimToken>, note: Vec<u8>, bump: u8, quantity: u64) -> Result<()> {
-        let note_hash = hash(&note).to_byte();
+        let note_hash = hash(&note).to_bytes();
 
         let stored_hash = &ctx.accounts.data_account.note_hash;
         require!(note_hash == *stored_hash, CustomError::InvalidNoteHash);
 
-        let bump = ctx.accounts.data_account.bump;
-        let seeds = &[b"thevapeclub", ctx.accounts.payer.key().as_ref(), &[bump]];
+        let payer_key = ctx.accounts.payer.key();
+        // let bump = ctx.accounts.data_account.bump;
+        let seeds = &[b"vapeclub", payer_key.as_ref(), &[bump]];
         let signer = &[&seeds[..]];
 
         mint_to(
@@ -41,9 +42,8 @@ mod claimtoken {
 pub struct ClaimToken<'info> {
     #[account(
         mut,
-        seeds = [b"thevapeclub", payer.key().as_ref()],
+        seeds = [b"vapeclub", payer.key().as_ref()],
         bump = data_account.bump,
-        has_one = payer
     )]
     pub data_account: Account<'info, NoteData>,
     #[account(mut)]
@@ -66,6 +66,7 @@ pub struct ClaimToken<'info> {
 pub struct NoteData {
     pub note_hash: [u8; 32],
     pub bump: u8,
+    pub payer: Pubkey,
 }
 
 #[error_code]
