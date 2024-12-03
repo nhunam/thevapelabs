@@ -6,10 +6,11 @@ skip-lint = false
 
 [programs.devnet]
 claimtoken = "2S5gqdRUEV1ogfYTMVE3rd9j8wz8Yw6vyJgYgWUgmNcD"
-saveproof = "4jr2thpc2ogDAgra58QhnyvXaXZGZzbEpCWxPf3TsuGA"
+saveproof = "PaBmvNkxYiNJRu5QDFVoRGRCfp4BNE5vfaFDSipSZQY"
+stake_token = "4U6ckJgYxdfwWLLzS96BAbjRvRtsi3dadNWXULwiEAwb"
 
 [programs.localnet]
-saveproof = "4jr2thpc2ogDAgra58QhnyvXaXZGZzbEpCWxPf3TsuGA"
+saveproof = "PaBmvNkxYiNJRu5QDFVoRGRCfp4BNE5vfaFDSipSZQY"
 vapeclub = "qSSQdrgbWD7cXNE4S25Gbadkr6Yd878c4vJ7bWApxyD"
 
 [registry]
