@@ -81,9 +81,11 @@ describe("misttoken", () => {
       user.publicKey
     );
 
+    const mintAmount = new BN(1000 * 10 ** 6);
+
     const tx = await program.methods
       .claim({
-        amount: new BN(1000 * 10 ** 6),
+        amount: mintAmount,
       })
       .accounts({
         signer: verifier.publicKey,
@@ -94,6 +96,14 @@ describe("misttoken", () => {
       .signers([verifier])
       .rpc(confirmOptions);
 
+    const tokenBalance =
+      await program.provider.connection.getTokenAccountBalance(
+        userTokenAccount.address
+      );
+    assert.equal(
+      tokenBalance.value.uiAmount * 10 ** tokenBalance.value.decimals,
+      mintAmount.toNumber()
+    );
     console.log("Claim transaction signature", tx);
   });
 });
