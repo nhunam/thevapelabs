@@ -8,16 +8,6 @@ pub enum MistTokenError {
     NotInitialized,
     #[msg("Invalid Authority")]
     InvalidAuthority,
-    #[msg("Insufficient Tokens")]
-    InsufficientTokens,
-    #[msg("Insufficient SOL")]
-    InsufficientSOL,
-    #[msg("Insufficient Fee")]
-    InsufficientFee,
-    #[msg("Min buy is 1 Token")]
-    SlippageExceeded,
     #[msg("Invalid Amount")]
     InvalidAmount,
-    #[msg("Empty Supply")]
-    EmptySupply,
 }

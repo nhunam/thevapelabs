@@ -8,3 +8,10 @@ pub struct InitEvent {
     pub symbol: String,
     pub uri: String,
 }
+
+#[event]
+pub struct ClaimEvent {
+    pub mint: Pubkey,
+    pub user: Pubkey,
+    pub amount: u64,
+}
