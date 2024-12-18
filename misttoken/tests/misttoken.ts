@@ -50,7 +50,7 @@ describe("misttoken", () => {
   it("Is initialized!", async () => {
     const name = "Mist Token";
     const symbol = "MIST";
-    const uri = "https://test.com";
+    const uri = "https://arweave.net/DKCh5pBTvRABEEJvxDeAXhXXAfE8a3hKV2i8TaECznQ7";
 
     const tx = await program.methods
       .initialize({

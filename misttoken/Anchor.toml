@@ -4,6 +4,9 @@
 resolution = true
 skip-lint = false
 
+[programs.devnet]
+misttoken = "E7xcfMx5u8fGum2gobLLz5YqrVDQypmAyr3gCzx12c4P"
+
 [programs.localnet]
 misttoken = "E7xcfMx5u8fGum2gobLLz5YqrVDQypmAyr3gCzx12c4P"
 
@@ -11,8 +14,8 @@ misttoken = "E7xcfMx5u8fGum2gobLLz5YqrVDQypmAyr3gCzx12c4P"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
-wallet = "~/.config/solana/test.json"
+cluster = "devnet"
+wallet = "~/.config/solana/thevapelabs.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
