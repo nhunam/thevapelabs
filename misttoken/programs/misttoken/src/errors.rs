@@ -10,4 +10,6 @@ pub enum MistTokenError {
     InvalidAuthority,
     #[msg("Invalid Amount")]
     InvalidAmount,
+    #[msg("Not Enough Balance")]
+    NotEnoughBalance,
 }
