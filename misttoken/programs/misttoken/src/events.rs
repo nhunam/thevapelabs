@@ -14,4 +14,5 @@ pub struct ClaimEvent {
     pub mint: Pubkey,
     pub user: Pubkey,
     pub amount: u64,
+    pub is_burn: bool,
 }

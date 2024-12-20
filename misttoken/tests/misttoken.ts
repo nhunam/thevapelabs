@@ -50,7 +50,8 @@ describe("misttoken", () => {
   it("Is initialized!", async () => {
     const name = "Mist Token";
     const symbol = "MIST";
-    const uri = "https://arweave.net/DKCh5pBTvRABEEJvxDeAXhXXAfE8a3hKV2i8TaECznQ7";
+    const uri =
+      "https://arweave.net/DKCh5pBTvRABEEJvxDeAXhXXAfE8a3hKV2i8TaECznQ7";
 
     const tx = await program.methods
       .initialize({
@@ -86,14 +87,16 @@ describe("misttoken", () => {
     const tx = await program.methods
       .claim({
         amount: mintAmount,
+        isBurn: false,
       })
       .accounts({
         signer: verifier.publicKey,
+        user: user.publicKey,
         mint: mint.publicKey,
         global: globalPDA,
         userTokenAccount: userTokenAccount.address,
       })
-      .signers([verifier])
+      .signers([verifier, user])
       .rpc(confirmOptions);
 
     const tokenBalance =
@@ -105,6 +108,53 @@ describe("misttoken", () => {
       mintAmount.toNumber()
     );
     console.log("Claim transaction signature", tx);
+  });
+
+  it("Is burned!", async () => {
+    const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+      program.provider.connection,
+      verifier,
+      mint.publicKey,
+      user.publicKey
+    );
+
+    const oldBalance = await program.provider.connection.getTokenAccountBalance(
+      userTokenAccount.address
+    );
+    console.log("Old balance", oldBalance.value.uiAmount);
+
+    assert.equal(
+      oldBalance.value.uiAmount * 10 ** oldBalance.value.decimals > 0,
+      true
+    );
+
+    const burnAmount = new BN(1000);
+    const txBurn = await program.methods
+      .claim({
+        amount: burnAmount,
+        isBurn: true,
+      })
+      .accounts({
+        signer: verifier.publicKey,
+        user: user.publicKey,
+        mint: mint.publicKey,
+        global: globalPDA,
+        userTokenAccount: userTokenAccount.address,
+      })
+      .signers([verifier, user])
+      .rpc(confirmOptions);
+
+    const newBalance = await program.provider.connection.getTokenAccountBalance(
+      userTokenAccount.address
+    );
+
+    assert.equal(
+      oldBalance.value.uiAmount * 10 ** oldBalance.value.decimals -
+        newBalance.value.uiAmount * 10 ** newBalance.value.decimals,
+      burnAmount.toNumber()
+    );
+
+    console.log("Burn transaction signature", txBurn);
   });
 });
 
