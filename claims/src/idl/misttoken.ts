@@ -32,6 +32,11 @@ export type Misttoken = {
           "signer": true
         },
         {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "mint",
           "writable": true
         },
@@ -75,10 +80,6 @@ export type Misttoken = {
         {
           "name": "tokenProgram",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-        },
-        {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "eventAuthority",
@@ -353,6 +354,11 @@ export type Misttoken = {
       "code": 6003,
       "name": "invalidAmount",
       "msg": "Invalid Amount"
+    },
+    {
+      "code": 6004,
+      "name": "notEnoughBalance",
+      "msg": "Not Enough Balance"
     }
   ],
   "types": [
@@ -372,6 +378,10 @@ export type Misttoken = {
           {
             "name": "amount",
             "type": "u64"
+          },
+          {
+            "name": "isBurn",
+            "type": "bool"
           }
         ]
       }
@@ -384,6 +394,10 @@ export type Misttoken = {
           {
             "name": "amount",
             "type": "u64"
+          },
+          {
+            "name": "isBurn",
+            "type": "bool"
           }
         ]
       }
