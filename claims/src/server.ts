@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  ComputeBudgetProgram,
   ConfirmOptions,
   Connection,
   Keypair,
@@ -75,16 +76,18 @@ const claims = async (
       instructions.push(claimIx);
       signers.push(r.user);
     }
-
+    const tx = new Transaction();
+    tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 1_000_000 }));
+    tx.add(...instructions);
     // Send and confirm transaction
-    const tx = await sendAndConfirmTransaction(
+    const txHash = await sendAndConfirmTransaction(
       program.provider.connection,
-      new Transaction().add(...instructions),
+      tx,
       signers,
       confirmOptions
     );
 
-    return tx;
+    return txHash;
   } catch (error) {
     console.error("Claims failed:", error);
     throw error;
@@ -133,14 +136,10 @@ const connection = new Connection(
 );
 
 const mint = loadKeypair(
-  "/Users/tiennv/work/ext/thevapelabs/claims/src/keys/mistVpcymdyB5bEMdMJvmCcacjqaL2SeUCw38wyz6MF.json"
+  "./src/keys/mistVpcymdyB5bEMdMJvmCcacjqaL2SeUCw38wyz6MF.json"
 );
-const authority = loadKeypair(
-  "/Users/tiennv/work/ext/thevapelabs/claims/src/keys/thevapelabs.json"
-);
-const verifier = loadKeypair(
-  "/Users/tiennv/work/ext/thevapelabs/claims/src/keys/verifier.json"
-);
+const authority = loadKeypair("./src/keys/thevapelabs.json");
+const verifier = loadKeypair("./src/keys/verifier.json");
 
 const wallet = new NodeWallet(authority);
 

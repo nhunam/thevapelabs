@@ -15,9 +15,7 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddressSync,
-  getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
-import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 const connection = new Connection(
   "https://devnet.helius-rpc.com/?api-key=1c0f8676-0ead-45f1-a6ed-0e0b16d5b11d"
