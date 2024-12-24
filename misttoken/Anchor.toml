@@ -14,7 +14,7 @@ misttoken = "E7xcfMx5u8fGum2gobLLz5YqrVDQypmAyr3gCzx12c4P"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/thevapelabs.json"
 
 [scripts]
