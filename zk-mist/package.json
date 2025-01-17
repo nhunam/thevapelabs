@@ -1,0 +1,31 @@
+{
+  "name": "zk-solana",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lightprotocol/compressed-token": "0.18.0",
+    "@lightprotocol/stateless.js": "0.18.0",
+    "@solana/spl-token": "0.3.9",
+    "@solana/spl-token-metadata": "^0.1.6",
+    "@solana/web3.js": "^1.98.0",
+    "@types/node": "^20.12.7",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "logform": "2.6.1",
+    "pg": "^8.13.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "winston": "3.14.2",
+    "winston-transport": "4.7.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.10"
+  }
+}
