@@ -19,7 +19,7 @@ import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { getOrCreateATAInstruction, loadKeypair } from "./utils";
 
 const app = express();
-const PORT: number = 3000;
+const PORT: number = 4000;
 
 const confirmOptions = {
   skipPreflight: true,
