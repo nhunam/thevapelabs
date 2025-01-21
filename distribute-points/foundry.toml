@@ -1,0 +1,16 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+# Monad Configuration
+# TODO: Add RPC URL and Chain ID
+eth-rpc-url = "https://rpc.monad-testnet.category.xyz/rpc/SPa4TbSgMJxz5ywmzYvvc9O5nkAVGTgOcsi7yErG"
+chain_id = 10143
+
+
+# TODO: Add Explorer URL and Chain ID
+# [etherscan]
+# monadDevnet = { key = "DUMMY_VALUE", url = "EXPLORER_URL", chain = "MONAD_CHAIN_ID" }
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

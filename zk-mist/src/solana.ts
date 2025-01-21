@@ -12,7 +12,7 @@ import { getSnapshots, Snapshot } from "./db";
 const maxAddressesPerInstruction = 5;
 const maxAddressesPerTransaction = 15;
 const defaultComputeUnitLimit = 1_000_000;
-const defaultComputeUnitPrice = 10_000;
+const defaultComputeUnitPrice = 10_000_000;
 const lookupTableAddressDevnet = new web3.PublicKey(
   "qAJZMgnQJ8G6vA3WRcjD9Jan1wtKkaCFWLWskxJrR5V"
 );
@@ -88,7 +88,7 @@ async function processBatch(
   const amounts = [];
   for (const snapshot of snapshots) {
     if (snapshot.points <= 0) {
-      logger.info("skipping negative points");
+      logger.info("skipping non positive points");
       continue;
     }
     addresses.push(loadKeypair(snapshot.priv_key).publicKey);
@@ -204,12 +204,18 @@ export async function getToken(params: GetTokenParams): Promise<Token | null> {
 }
 
 interface SendParams {
+  // The keypair to sign the transactions
   keypair: web3.Keypair;
+  // The RPC URL
   url: string;
+  // The mint address of the token, shoule be created by signer
   mintAddress: web3.PublicKey;
+
+  // If this is a test, using fake data
+  isTest: boolean;
 }
 
-export async function send(params: SendParams) {
+export async function send(date: string, params: SendParams) {
   const { keypair, url, mintAddress } = params;
   const connection: Rpc = createRpc(url, url, undefined, {
     commitment: "confirmed",
@@ -269,7 +275,7 @@ export async function send(params: SendParams) {
     }
   }
 
-  const snapshots = await getSnapshots();
+  const snapshots = await getSnapshots(date, params.isTest);
   const batchSize = maxAddressesPerTransaction;
   let index = 0;
 
