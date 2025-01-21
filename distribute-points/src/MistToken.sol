@@ -25,6 +25,7 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
 
     /**
      * @dev Burns tokens from a user's account. Only whitelisted contracts can call this function.
+     * No approval needed for whitelisted contracts.
      * @param _from The address of the user whose tokens will be burned.
      * @param _amount The amount of tokens to burn.
      */
@@ -41,7 +42,7 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
             "Burn amount exceeds available balance."
         );
 
-        _spendAllowance(_from, msg.sender, _amount);
+        // Direct burn without approval check
         _burn(_from, _amount);
     }
 

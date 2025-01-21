@@ -241,5 +241,65 @@ contract PointSyncerTest is Test {
         pointSyncer.burn(froms, amounts);
     }
 
+    function testOnlyOwnerCanBurnMultipleUsers() public {
+        // Setup: Fund and distribute tokens first
+        vm.startPrank(owner);
+        mistToken.approve(address(pointSyncer), FUND_AMOUNT);
+        pointSyncer.fund(FUND_AMOUNT);
+
+        // Distribute tokens to multiple users
+        address[] memory recipients = new address[](3);
+        recipients[0] = user1;
+        recipients[1] = user2;
+        recipients[2] = user3;
+
+        uint256[] memory distributeAmounts = new uint256[](3);
+        distributeAmounts[0] = 1000 * 10 ** 18;
+        distributeAmounts[1] = 2000 * 10 ** 18;
+        distributeAmounts[2] = 3000 * 10 ** 18;
+
+        pointSyncer.distribute(recipients, distributeAmounts);
+        vm.stopPrank();
+
+        // Prepare burn data
+        address[] memory burnAddresses = new address[](3);
+        burnAddresses[0] = user1;
+        burnAddresses[1] = user2;
+        burnAddresses[2] = user3;
+
+        uint256[] memory burnAmounts = new uint256[](3);
+        burnAmounts[0] = 500 * 10 ** 18;
+        burnAmounts[1] = 1000 * 10 ** 18;
+        burnAmounts[2] = 1500 * 10 ** 18;
+
+        // Try to burn as non-owner (user1)
+        vm.prank(user1);
+        vm.expectRevert();
+        pointSyncer.burn(burnAddresses, burnAmounts);
+
+        // Verify balances haven't changed
+        assertEq(mistToken.balanceOf(user1), distributeAmounts[0]);
+        assertEq(mistToken.balanceOf(user2), distributeAmounts[1]);
+        assertEq(mistToken.balanceOf(user3), distributeAmounts[2]);
+
+        // Now burn as owner
+        vm.prank(owner);
+        pointSyncer.burn(burnAddresses, burnAmounts);
+
+        // Verify balances after successful burn
+        assertEq(
+            mistToken.balanceOf(user1),
+            distributeAmounts[0] - burnAmounts[0]
+        );
+        assertEq(
+            mistToken.balanceOf(user2),
+            distributeAmounts[1] - burnAmounts[1]
+        );
+        assertEq(
+            mistToken.balanceOf(user3),
+            distributeAmounts[2] - burnAmounts[2]
+        );
+    }
+
     receive() external payable {}
 }
