@@ -13,6 +13,9 @@ contract PointSyncerTest is Test {
     address public user1;
     address public user2;
     address public user3;
+    address public user4;
+    address public user5;
+    address public user6;
 
     uint256 public constant INITIAL_SUPPLY = 1000000 * 10 ** 18; // 1 million tokens
     uint256 public constant FUND_AMOUNT = 100000 * 10 ** 18; // 100k tokens
@@ -27,6 +30,9 @@ contract PointSyncerTest is Test {
         user1 = makeAddr("user1");
         user2 = makeAddr("user2");
         user3 = makeAddr("user3");
+        user4 = makeAddr("user4");
+        user5 = makeAddr("user5");
+        user6 = makeAddr("user6");
 
         // Deploy contracts as owner
         vm.startPrank(owner);
@@ -79,18 +85,28 @@ contract PointSyncerTest is Test {
         mistToken.approve(address(pointSyncer), FUND_AMOUNT);
         pointSyncer.fund(FUND_AMOUNT);
 
-        address[] memory recipients = new address[](3);
+        address[] memory recipients = new address[](6);
         recipients[0] = user1;
         recipients[1] = user2;
         recipients[2] = user3;
+        recipients[3] = user4;
+        recipients[4] = user5;
+        recipients[5] = user6;
 
-        uint256[] memory amounts = new uint256[](3);
+        uint256[] memory amounts = new uint256[](6);
         amounts[0] = 1000 * 10 ** 18;
         amounts[1] = 2000 * 10 ** 18;
         amounts[2] = 3000 * 10 ** 18;
+        amounts[3] = 4000 * 10 ** 18;
+        amounts[4] = 5000 * 10 ** 18;
+        amounts[5] = 6000 * 10 ** 18;
 
-        uint256 totalAmount = amounts[0] + amounts[1] + amounts[2];
-
+        uint256 totalAmount = amounts[0] +
+            amounts[1] +
+            amounts[2] +
+            amounts[3] +
+            amounts[4] +
+            amounts[5];
         // Expect Distributed event
         vm.expectEmit(true, true, true, true);
         emit Distributed(totalAmount);
@@ -103,6 +119,9 @@ contract PointSyncerTest is Test {
         assertEq(mistToken.balanceOf(user1), amounts[0]);
         assertEq(mistToken.balanceOf(user2), amounts[1]);
         assertEq(mistToken.balanceOf(user3), amounts[2]);
+        assertEq(mistToken.balanceOf(user4), amounts[3]);
+        assertEq(mistToken.balanceOf(user5), amounts[4]);
+        assertEq(mistToken.balanceOf(user6), amounts[5]);
     }
 
     function testBurnSuccess() public {
