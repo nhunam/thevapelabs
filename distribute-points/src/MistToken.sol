@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract MistToken is ERC20, Ownable, ReentrancyGuard {
     mapping(address => bool) public burnWhitelist;
+    mapping(address => uint256) public lastCheckInDate;
+
+    event CheckedIn(address indexed user, uint256 amount);
 
     constructor() ERC20("MistToken", "MIST") Ownable(msg.sender) {}
 
@@ -62,4 +65,22 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
     function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
     }
+
+    /**
+     * @dev User claim tokens when check in daily.
+     * @param _to The address that will receive the tokens.
+     * @param _amount The amount of tokens check in.
+     */
+    function checkIn(address _to, uint256 _amount) public onlyOwner {
+        uint256 currentDate = block.timestamp / 86400;
+        require(lastCheckInDate[_to] < currentDate, "Already checked in today!");
+        require(_to != address(0), "Cannot check in from zero address!");
+        require(_amount > 0, "Invalid amount!");
+
+        lastCheckInDate[_to] = currentDate;
+        _mint(_to, _amount);
+
+        emit CheckedIn(_to, _amount);
+    }
+
 }
