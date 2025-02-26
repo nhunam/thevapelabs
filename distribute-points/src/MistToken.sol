@@ -4,8 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract MistToken is ERC20, Ownable, ReentrancyGuard {
+    using ECDSA for bytes32;
+
     mapping(address => bool) public burnWhitelist;
     uint256 public constant CHECKIN_FEE = 0.00001 * (10**18);
     uint256 public constant MAX_CHECKIN_FEE = 0.1 * (10**18);
@@ -13,10 +16,17 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
     mapping(address => uint256) public lastCheckInDate;
     mapping(address => bool) public hasClaimedFaucet;
 
+    address public immutable backendSigner;
+    mapping(address => uint256) public latestNonce;
+
     event CheckedIn(address indexed user, uint256 amount);
     event FaucetSent(address indexed user, uint256 amount);
+    event Claimed(address indexed user, uint256 amount, uint256 nonce);
 
-    constructor() ERC20("MistToken", "MIST") Ownable(msg.sender) {}
+    constructor(address _backendSigner) ERC20("MistToken", "MIST") Ownable(msg.sender) {
+        require(_backendSigner != address(0), "Invalid backend signer");
+        backendSigner = _backendSigner;
+    }
 
     /**
      * @dev Sets the whitelisted status of a contract for burning tokens.
@@ -63,15 +73,6 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev Function to mint tokens. Only the owner can mint.
-     * @param _to The address that will receive the minted tokens.
-     * @param _amount The amount of tokens to mint.
-     */
-    function mint(address _to, uint256 _amount) public onlyOwner {
-        _mint(_to, _amount);
-    }
-
-    /**
      * @dev User check in by sending min fee to owner.
      */
     function checkIn() external payable nonReentrant {
@@ -98,5 +99,49 @@ contract MistToken is ERC20, Ownable, ReentrancyGuard {
         require(success, "Transfer failed");
 
         emit FaucetSent(_to, msg.value);
+    }
+
+    /**
+     * @dev Allows a user to claim MIST tokens if they provide a valid cryptographic signature.
+     * The signature is generated off-chain based on the user's address, 
+     * the claim amount, and a nonce to ensure uniqueness and prevent replay attacks.
+     * @param _amount The amount of MIST tokens to be minted for the user.
+     * @param _userNonce A unique nonce for the user to ensure each claim request is unique.
+     * @param _signature A cryptographic signature that verifies the legitimacy of the claim request.
+     */
+    function claim(uint256 _amount, uint256 _userNonce, bytes memory _signature) external nonReentrant {
+        require(_amount > 0, "Invalid amount");
+        require(_userNonce > latestNonce[msg.sender], "Invalid nonce");
+
+        bytes32 messageHash = keccak256(abi.encodePacked(msg.sender, _amount, _userNonce));
+        bytes32 ethSignedMessageHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash));
+
+        require(recoverSigner(ethSignedMessageHash, _signature) == backendSigner, "Invalid signature");
+
+        latestNonce[msg.sender] = _userNonce;
+
+        _mint(msg.sender, _amount);
+        emit Claimed(msg.sender, _amount, _userNonce);
+    }
+
+    function recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature) public pure returns (address) {
+        require(_signature.length == 65, "invalid signature length");
+
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+
+    assembly {
+        r := mload(add(_signature, 32))
+        s := mload(add(_signature, 64))
+        v := byte(0, mload(add(_signature, 96)))
+    }
+
+    // v {0, 1} to {27, 28}
+    if (v < 27) {
+        v += 27;
+    }
+
+    return ecrecover(_ethSignedMessageHash, v, r, s);
     }
 }
